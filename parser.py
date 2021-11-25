@@ -50,6 +50,8 @@ def get_params(args):
                         nargs='+', help='file format', default=["md"])
     parser.add_argument('-r', '--retry', dest='retry',
                         type=int, help='retry times', default=1)
+    parser.add_argument('-e', '--except', dest='except',
+                        nargs='+', help='except path', default=[])
 
     # github/gitee
     parser.add_argument('--repo', dest='repo',
@@ -99,6 +101,7 @@ def get_params(args):
         'dir': params['dir'],
         'format': params['format'],
         'retry': params['retry'],
+        'except': params['except'],
     }
 
     PARAMS['from']['execute'] = importlib.import_module(

@@ -1,30 +1,9 @@
 import sys
 import os
-import re
 
 import pandas as pd
 from parser import get_params
-
-DB = "picvt.csv"
-
-
-def endwith(path, formats):
-    for format in formats:
-        format_ok = os.path.splitext(path)[-1] == ".{}".format(format)
-        if format_ok:
-            return True
-    return False
-
-
-def file_replace(filename, pattern, repl):
-    data = ""
-    with open(filename, 'r') as f:
-        data = f.read()
-        f.close()
-        data = re.sub(pattern, repl, data)
-    with open(filename, 'w') as f:
-        f.write(data)
-        f.close()
+from utils import *
 
 
 if __name__ == "__main__":
@@ -34,9 +13,12 @@ if __name__ == "__main__":
     jobs_ok = 0
 
     db = []
+    dbq = {}
     for root, _, files in os.walk(params['dir']):
         for filepath in files:
             filepath = os.path.join(root, filepath)
+            if contenwith(filepath, [".git/", ".repo/"] + params['except']):
+                continue
             if not endwith(filepath, params['format']):
                 continue
 
@@ -59,10 +41,31 @@ if __name__ == "__main__":
             jobs_cnt = jobs_cnt + len(status['jobs'])
             db.append(status)
 
+    for i, status in enumerate(db):
+        for j, job in enumerate(status['jobs']):
+            print(status['filepath'], job['from'])
+
+    is_continue = input("Continue: [Y/n]")
+    if is_continue == 'n':
+        exit()
+
     jobs_idx = 0
     for i, status in enumerate(db):
         for j, job in enumerate(status['jobs']):
             jobs_idx = jobs_idx + 1
+
+            from_md5 = content_md5(job['from'].encode('utf-8'))
+            if from_md5 in dbq.keys():
+                db[i]['jobs'][j]['to'] = dbq[from_md5][0]
+                db[i]['jobs'][j]['save'] = dbq[from_md5][1]
+                db[i]['jobs'][j]['ok'] = True
+                print("[{}/{}]".format(jobs_idx, jobs_cnt),
+                    "repeating", job['from'], "done")
+
+                file_replace(db[i]['filepath'], db[i]['jobs']
+                             [j]['from'],  db[i]['jobs'][j]['to'])
+                jobs_ok = jobs_ok + 1
+                continue
 
             print("[{}/{}]".format(jobs_idx, jobs_cnt),
                   "fetching", job['from'], end=' ')
@@ -89,6 +92,7 @@ if __name__ == "__main__":
                 file_replace(db[i]['filepath'], db[i]['jobs']
                              [j]['from'],  db[i]['jobs'][j]['to'])
                 jobs_ok = jobs_ok + 1
+                dbq[from_md5] = (db[i]['jobs'][j]['to'], db[i]['jobs'][j]['save'])
 
     print("success {}/{}".format(jobs_ok, jobs_cnt))
 

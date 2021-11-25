@@ -22,6 +22,7 @@ class PICVT():
         try:
             response = requests.get(url, timeout=10)
         except requests.exceptions.RequestException as e:
+            print(e, end=' ')
             return None, None
         image = response.content
         image_format = IMAGE_RESPONSE_FORMAT[response.headers['Content-Type']] \
