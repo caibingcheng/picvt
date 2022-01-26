@@ -5,6 +5,11 @@
         "require": [["usrname", "password"]]
     },
     {
+        "platform": "local",
+        "execute": "picvt_local",
+        "require": []
+    },
+    {
         "platform": "github",
         "execute": "picvt_github",
         "require": ["token", ["user", "password"]]
