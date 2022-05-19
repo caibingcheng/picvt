@@ -2,11 +2,6 @@
 
 用于静态博客的图床转换工具
 
-## 已支持的图床
-
-- github (upload)
-- imgtu (download)
-
 ## 使用
 例如:
 ```Shell
@@ -40,6 +35,24 @@ optional arguments:
                         to
 ```
 
+## 已支持的图床
+
+- github
+```
+python3 ./picvt.py -D ../blog/content/posts/ -F imgtu -T github -t **** --repo resources --branch main --path images
+```
+
+- imgtu (download)
+```
+python3 ./picvt.py -D ../blog/content/posts/ -F imgtu -T github -t **** --repo resources --branch main --path images
+```
+
+- local (upload)
+```
+python3 ./picvt.py -D ../blog/content/ -F github -T local --path /home/xxx/projects/blog/content/statics/
+```
+
+
 ## 添加支持
 
 在`platforms`中添加`platforms/picvt_xxxx.py`, 比如`platforms/picvt_github.py`. 然后在`platforms/picvt_config.json`中添加关于此platform的配置.
@@ -58,19 +71,19 @@ class Process(PICVT):
 def extract(self, content):
     return None
 ```
-`extract`将用于原图床的链接提取, 输入是一段`string`, 实现者需要从中提取出待转换的图床链接, 并使用一个`list`返回.
+`extract`将用于原图床的链接提取, 输入是一段`string`, 比如一篇`markdown`的原始数据, 实现者需要从中提取出待转换的图床链接, 并使用一个`list`返回.
 
 #### download
-需要实现一个名为download的方法, 如:
+需要实现一个名为`download`的方法, 如:
 ```Python
 def download(self, url):
     return False, None
 ```
-`download`将用于原图床图片的下载, 并且需要将下载文件保存在本地磁盘, 其输入是原图床图片的链接, 输入是下载成功的状态以及保存的本地文件地址, 如果下载失败, 则本地文件地址为`None`.
+`download`将用于原图床图片的下载, 并且需要将下载文件保存在本地磁盘, 其输入是原图床图片的链接, 输出是下载成功的状态以及保存的本地文件地址, 如果下载失败, 则本地文件地址为`None`.
 父类`PICVT`中提供了`download`的实现, 但是不适用于所有平台, 所以特殊平台需要自己实现`download`方法.
 
 #### upload
-需要实现一个名为upload的方法, 如:
+需要实现一个名为`upload`的方法, 如:
 ```Python
 def upload(self, path, params):
     return False, None

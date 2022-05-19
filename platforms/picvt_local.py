@@ -1,11 +1,14 @@
 from .picvt_base import PICVT
 import re
+import os
+import shutil
 
 
 class Process(PICVT):
     def __init__(self):
         self.img_pattern = re.compile(r'^!\[.*', re.M)
-        self.url_pattern = re.compile(r'((((?<!\w)[A-Z,a-z]:)|(\.{1,2}\\))([^\b%\/\|:\n\"]*))|("\2([^%\/\|:\n\"]*)")|((?<!\w)(\.{1,2})?(?<!\/)(\/((\\\b)|[^ \b%\|:\n\"\\\/])+)+\/?)')
+        self.url_pattern = re.compile(
+            r'((((?<!\w)[A-Z,a-z]:)|(\.{1,2}\\))([^\b%\/\|:\n\"]*))|("\2([^%\/\|:\n\"]*)")|((?<!\w)(\.{1,2})?(?<!\/)(\/((\\\b)|[^ \b%\|:\n\"\\\/])+)+\/?)')
 
     def extract(self, content):
         url_list = []
@@ -18,3 +21,9 @@ class Process(PICVT):
 
     def download(self, url):
         return True, url
+
+    def upload(self, path, params):
+        dst = shutil.copy(path, params['config']['path'])
+        prelink = params['config']['link']
+        prelink = '/statics/' if prelink is "" else prelink
+        return True, prelink + dst.split('/')[-1]

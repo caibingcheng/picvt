@@ -53,13 +53,14 @@ def get_params(args):
     parser.add_argument('-e', '--except', dest='except',
                         nargs='+', help='except path', default=[])
 
-    # github/gitee
     parser.add_argument('--repo', dest='repo',
                         type=str, help='repo name', default=None)
     parser.add_argument('--branch', dest='branch',
                         type=str, help='branch name', default=None)
     parser.add_argument('--path', dest='path',
                         type=str, help='content path', default=None)
+    parser.add_argument('--link', dest='link',
+                        type=str, help='content link', default=None)
 
     parser.add_argument('-D', '--dir', dest='dir', required=True,
                         type=str, help='target dir')
@@ -81,6 +82,7 @@ def get_params(args):
         'repo': params['repo'],
         'branch': params['branch'],
         'path': params['path'],
+        'link': params['link'],
     }
     PARAMS = {
         'from': {

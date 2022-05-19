@@ -25,9 +25,13 @@ class PICVT():
             print(e, end=' ')
             return None, None
         image = response.content
-        image_format = IMAGE_RESPONSE_FORMAT[response.headers['Content-Type']] \
-            if 'Content-Type' in response.headers.keys() \
-            else None
+        image_format = None
+        has_content_type = 'Content-Type' in response.headers.keys()
+        has_content_key = None
+        if has_content_type:
+            has_content_key = response.headers['Content-Type'] in IMAGE_RESPONSE_FORMAT.keys()
+        if has_content_type and has_content_key:
+            image_format = IMAGE_RESPONSE_FORMAT[response.headers['Content-Type']]
         return image, image_format
 
     def _save_image_default(self, image, path):
@@ -123,8 +127,10 @@ class PICVT():
 
     def download(self, url):
         image, image_format = self._get_image_default(url)
+        if not image_format:
+            image_format = url.split('.')[-1]
 
-        if not image or not image_format:
+        if not image:
             return False, None
 
         md5 = self._get_content_md5(image)
@@ -136,8 +142,10 @@ class PICVT():
             save_ok = True
             exists_md5 = self._get_file_md5(path)
             if (exists_md5 != md5):
-                short_code = self._get_basen_encode(self._get_basen_decode(short_code) + 1)
-                path = self._get_save_path("{}.{}".format(short_code, image_format))
+                short_code = self._get_basen_encode(
+                    self._get_basen_decode(short_code) + 1)
+                path = self._get_save_path(
+                    "{}.{}".format(short_code, image_format))
                 save_ok = self._save_image_default(image, path)
 
         return save_ok, path
