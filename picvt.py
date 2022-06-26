@@ -27,7 +27,7 @@ if __name__ == "__main__":
                 content = f.read()
                 f.close()
 
-            urls = params['from']['execute'].extract(content)
+            urls = params['from']['execute'].extract(content, params['from'])
             if not urls:
                 continue
 
@@ -69,7 +69,7 @@ if __name__ == "__main__":
 
             print("[{}/{}]".format(jobs_idx, jobs_cnt),
                   "fetching", job['from'], end=' ')
-            save_ok, filepath = params['from']['execute'].download(job['from'])
+            save_ok, filepath = params['from']['execute'].download(job['from'], params['from'])
             db[i]['jobs'][j]['save'] = filepath
             db[i]['jobs'][j]['ok'] = save_ok
             if not save_ok:

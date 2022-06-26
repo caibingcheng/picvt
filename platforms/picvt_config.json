@@ -13,5 +13,10 @@
         "platform": "github",
         "execute": "picvt_github",
         "require": ["token", ["user", "password"]]
+    },
+    {
+        "platform": "7bu",
+        "execute": "picvt_7bu",
+        "require": [["user", "password"]]
     }
 ]

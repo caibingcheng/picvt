@@ -5,12 +5,12 @@ import re
 
 
 class Process(PICVT):
-    def __init__(self):
+    def __init__(self, params=None):
         self.img_pattern = re.compile(r'https://cdn.jsdelivr.net/gh/.*', re.M)
         self.url_pattern = re.compile(
             r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+[a-zA-Z]|[0-9]')
 
-    def extract(self, content):
+    def extract(self, content, params):
         url_list = []
         result = self.img_pattern.findall(content)
         for url in result:
@@ -58,7 +58,7 @@ class Process(PICVT):
             g.get_user().login, params['config']['repo'], params['config']['branch'], path)
         return True, url
 
-    def download(self, url):
+    def download(self, url, params):
         if "cdn.jsdelivr.net" in url:
             header = "https://raw.githubusercontent.com"
             imgpath = url.split("gh")[1]

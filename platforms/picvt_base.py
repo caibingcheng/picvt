@@ -15,7 +15,7 @@ class PICVT():
     _dir = "./picvt_temp"
     _basen = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-    def __init__(self):
+    def __init__(self, params=None):
         pass
 
     def _get_image_default(self, url):
@@ -122,10 +122,10 @@ class PICVT():
         md5 = md5.hexdigest()
         return md5
 
-    def extract(self, content):
+    def extract(self, content, params):
         return None
 
-    def download(self, url):
+    def download(self, url, params):
         image, image_format = self._get_image_default(url)
         if not image_format:
             image_format = url.split('.')[-1]

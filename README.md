@@ -47,11 +47,15 @@ python3 ./picvt.py -D ../blog/content/posts/ -F imgtu -T github -t **** --repo r
 python3 ./picvt.py -D ../blog/content/posts/ -F imgtu -T github -t **** --repo resources --branch main --path images
 ```
 
-- local (upload)
+- local
 ```
-python3 ./picvt.py -D ../blog/content/ -F github -T local --path /home/xxx/projects/blog/content/statics/
+python3 ./picvt.py -D ../blog/content/ -F github -T local --path /home/xxx/projects/blog/content/statics/ --link /statics/
 ```
 
+- 去不图床(delete token还有点问题)
+```
+python3 ./picvt.py -D ../blog/content/ -F local -T 7bu --path /home/xxx/projects/blog/content/ --user xx@xx.com --paasswd *****
+```
 
 ## 添加支持
 

@@ -107,9 +107,9 @@ def get_params(args):
     }
 
     PARAMS['from']['execute'] = importlib.import_module(
-        'platforms.' + PARAMS['from']['execute']).Process()
+        'platforms.' + PARAMS['from']['execute']).Process(PARAMS)
     PARAMS['to']['execute'] = importlib.import_module(
-        'platforms.' + PARAMS['to']['execute']).Process()
+        'platforms.' + PARAMS['to']['execute']).Process(PARAMS)
 
     return PARAMS
 

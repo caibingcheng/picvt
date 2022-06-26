@@ -3,12 +3,12 @@ import re
 
 
 class Process(PICVT):
-    def __init__(self):
+    def __init__(self, params=None):
         self.img_pattern = re.compile(r'.*ax1x.*', re.M)
         self.url_pattern = re.compile(
             r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+[a-zA-Z]|[0-9]')
 
-    def extract(self, content):
+    def extract(self, content, params):
         url_list = []
         result = self.img_pattern.findall(content)
         for url in result:
