@@ -17,6 +17,6 @@
     {
         "platform": "7bu",
         "execute": "picvt_7bu",
-        "require": [["user", "password"]]
+        "require": ["token"]
     }
 ]

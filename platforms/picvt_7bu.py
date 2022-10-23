@@ -1,6 +1,3 @@
-from curses import delay_output
-from traceback import print_tb
-from leancloud import Object
 from .picvt_base import PICVT
 import re
 import os
@@ -9,28 +6,9 @@ import shutil
 import requests
 
 
-class API7BU(Object):
-    def __init__(self, usr, passwd):
-        self.usr = usr
-        self.passwd = passwd
-        self.init_token(usr, passwd)
-
-    def __del__(self):
-        self.del_token()
-
-    def init_token(self, usr, passwd):
-        url_token = 'https://7bu.top/api/v1/tokens'
-        params = {'email': usr,
-                  'password': passwd}
-        response = requests.post(url_token, data=params, headers={
-                                 'Accept': 'application/json'})
-        # assert ready
-        self.token = 'Bearer ' + json.loads(response.text)['data']['token']
-
-    def del_token(self):
-        url_token = 'https://7bu.top/api/v1/tokens'
-        requests.delete(url_token, headers={'Accept': 'application/json',
-                                            'Authorization': self.token})
+class API7BU():
+    def __init__(self, token):
+        self.token = 'Bearer ' + token
 
     def upload(self, files):
         url_upload = 'https://7bu.top/api/v1/upload'
@@ -40,12 +18,8 @@ class API7BU(Object):
                 'Accept': 'application/json',
                 'Authorization': self.token})
         except Exception as e:
-            print('get response error {} retrying...'.format(e))
-            self.del_token()
-            self.init_token(self.usr, self.passwd)
-            response = requests.post(url_upload, files=files, headers={
-                'Accept': 'application/json',
-                'Authorization': self.token})
+            print('get response error {} '.format(e))
+            return None
 
         # assert data exist
         assert(json.loads(response.text)['data'])
@@ -57,7 +31,7 @@ class Process(PICVT):
         self.img_pattern = re.compile(r'^!\[.*', re.M)
         self.url_pattern = re.compile(
             r'(^//.|^/|^[a-zA-Z])?:?/.+(/$)?')
-        self.api7bu = API7BU(params['to']['user'], params['to']['password'])
+        self.api7bu = API7BU(params['to']['token'])
 
     def extract(self, content, params):
         url_list = []
@@ -76,5 +50,8 @@ class Process(PICVT):
             'file': open(path, 'rb'),
         }
         response = self.api7bu.upload(files)
+        if response is None:
+            return False, None
+
         img_url = response['links']['url']
         return True, img_url
