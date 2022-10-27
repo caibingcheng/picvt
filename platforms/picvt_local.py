@@ -8,7 +8,7 @@ class Process(PICVT):
     def __init__(self, params=None):
         self.img_pattern = re.compile(r'^!\[.*', re.M)
         self.url_pattern = re.compile(
-            r'((((?<!\w)[A-Z,a-z]:)|(\.{1,2}\\))([^\b%\/\|:\n\"]*))|("\2([^%\/\|:\n\"]*)")|((?<!\w)(\.{1,2})?(?<!\/)(\/((\\\b)|[^ \b%\|:\n\"\\\/])+)+\/?)')
+            r'((((?<!\w)[A-Z,a-z]:)|(\.{1,2}\\))([^\b%\/\|:\n\"]*))|("\2([^%\/\|:\n\"]*)")|((?<!\w)(\.{1,2})?(?<!\/)(\/((\\\b)|[^( |\))\b%\|:\n\"\\\/])+)+\/?)')
 
     def extract(self, content, params):
         url_list = []

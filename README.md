@@ -54,7 +54,7 @@ python3 ./picvt.py -D ../blog/content/ -F github -T local --path /home/xxx/proje
 
 - 去不图床(delete token还有点问题)
 ```
-python3 ./picvt.py -D ../blog/content/ -F local -T 7bu --path /home/xxx/projects/blog/content/ --user xx@xx.com --paasswd *****
+python3 ./picvt.py -D ../blog/content/ -F local -T 7bu --path /home/xxx/projects/blog/content/ --token xxxx
 ```
 
 ## 添加支持
